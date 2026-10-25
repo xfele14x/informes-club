@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Descarga de informe PDF</title>
+<style>
+:root{--bg:#f5f3ee;--fg:#14213d;--mu:#4a5568;--ac:#c42b3e;--card:#fff;--bd:#d9d5ca}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1b3a;--fg:#f5f3ee;--mu:#b9c4dd;--ac:#ff7a87;--card:#17264f;--bd:#2b3b6b}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+.c{width:100%;max-width:420px;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:24px;text-align:center}
+h1{font-size:20px;margin:0 0 6px}p{color:var(--mu);margin:6px 0}
+.f{font-weight:600;color:var(--fg);word-break:break-all;margin:12px 0}
+a.b{display:block;margin:14px 0 8px;padding:14px;border-radius:12px;background:var(--ac);color:#fff;font-weight:700;text-decoration:none;font-size:17px}
+a.s{display:inline-block;margin-top:6px;color:var(--fg);text-decoration:underline}
+.e{color:var(--ac);font-weight:600}
+</style></head><body><div class="c" id="c"><h1>Preparando informe…</h1></div>
+<script>
+(function(){
+var c=document.getElementById('c');
+function err(m){c.innerHTML='<h1>No se pudo abrir el informe</h1><p class="e">'+m+'</p><p>Vuelve al dashboard y toca el botón del PDF otra vez.</p>'}
+try{
+  var h=location.hash.replace(/^#/,''),p={};
+  h.split('&').forEach(function(x){var i=x.indexOf('=');if(i>0)p[x.slice(0,i)]=x.slice(i+1)});
+  if(!p.d)return err('Este enlace no trae ningún PDF.');
+  var b=p.d.replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';
+  var s=atob(b),u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);
+  if(String.fromCharCode(u[0],u[1],u[2],u[3])!=='%PDF')return err('El archivo no es un PDF válido.');
+  var fn=decodeURIComponent(p.n||'informe.pdf').replace(/[^\w.\-]+/g,'_');
+  var url=URL.createObjectURL(new Blob([u],{type:'application/pdf'}));
+  c.innerHTML='<h1>Informe listo</h1><p>Toca el botón para descargarlo.</p><div class="f"></div><a class="b" id="dl">Descargar PDF</a><a class="s" id="op" target="_blank">Abrir en otra pestaña</a><p style="font-size:13px">Los datos no se guardan en ningún servidor: el informe viaja dentro del enlace.</p>';
+  c.querySelector('.f').textContent=fn;
+  var d=document.getElementById('dl');d.href=url;d.download=fn;
+  document.getElementById('op').href=url;
+}catch(e){err('El enlace está incompleto o es demasiado largo.')}
+})();
+</script></body></html>
